@@ -8,15 +8,50 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  flex-direction: column;
 }
 
 #game {
   text-align: center;
+  width: 320px;
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #0af;
 }
 
 button {
-  margin: 10px;
-  padding: 10px 20px;
+  margin: 10px 5px;
+  padding: 10px 25px;
   font-size: 18px;
   cursor: pointer;
+  background: #0af;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: #08c;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+#log {
+  white-space: pre-line;
+  margin-top: 15px;
+  min-height: 80px;
+  background: #111;
+  padding: 10px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 16px;
+  text-align: left;
+  overflow-y: auto;
+  max-height: 150px;
+  box-shadow: inset 0 0 5px #0af;
 }
