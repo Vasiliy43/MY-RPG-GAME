@@ -10,6 +10,7 @@ function selectClass(chosenClass) {
   isDefending = false;
   document.getElementById("class-selection").style.display = "none";
   document.getElementById("actions").style.display = "block";
+  document.getElementById("city").style.display = "none";
   document.getElementById("class-title").textContent = `Класс: ${playerClass}`;
   updateHP();
   log(`Вы выбрали класс: ${playerClass}`);
@@ -88,14 +89,45 @@ function getRandom(min, max) {
 function goToCity() {
   document.getElementById("actions").style.display = "none";
   document.getElementById("city").style.display = "block";
+  document.getElementById("city-log").textContent = "";
+}
+
+function rest() {
+  playerHP = 100;
+  updateHP();
+  document.getElementById("city-log").textContent = "Вы отдохнули и восстановили здоровье.";
+  saveProgress();
+}
+
+function shop() {
+  document.getElementById("city-log").textContent = "Магазин ещё не работает. Зайдите позже.";
+}
+
+function startQuest() {
+  enemyHP = 100;
+  isDefending = false;
+  document.getElementById("city").style.display = "none";
+  document.getElementById("actions").style.display = "block";
+  updateHP();
+  log("Вы вышли на новое задание!");
+  const buttons = document.querySelectorAll("#actions button");
+  buttons.forEach(btn => btn.disabled = false);
+  saveProgress();
 }
 
 function restart() {
   document.getElementById("city").style.display = "none";
+  document.getElementById("actions").style.display = "none";
   document.getElementById("class-selection").style.display = "block";
   const buttons = document.querySelectorAll("#actions button");
   buttons.forEach(btn => btn.disabled = false);
   localStorage.removeItem("rpgSave");
+  playerClass = "";
+  playerHP = 100;
+  enemyHP = 100;
+  isDefending = false;
+  log("");
+  updateHP();
 }
 
 // Сохранение
@@ -119,6 +151,7 @@ function loadProgress() {
     isDefending = data.isDefending;
     document.getElementById("class-selection").style.display = "none";
     document.getElementById("actions").style.display = "block";
+    document.getElementById("city").style.display = "none";
     document.getElementById("class-title").textContent = `Класс: ${playerClass}`;
     updateHP();
     log(`Загружено сохранение. Вы — ${playerClass}`);
