@@ -1,31 +1,24 @@
-function chooseClass(characterClass) {
-    const gameDiv = document.getElementById('game');
-    gameDiv.innerHTML = `
-        <p>Вы выбрали: <b>${characterClass}</b></p>
-        <p>Что хотите сделать?</p>
-        <button onclick="attack()">Атаковать</button>
-        <button onclick="defend()">Защищаться</button>
-        <button onclick="showStatus()">Посмотреть статус</button>
-        <div id="actionResult" style="margin-top: 15px; color: #ffd700;"></div>
-    `;
+let playerClass = "";
 
-    // Сохраняем выбранный класс в глобальную переменную
-    window.playerClass = characterClass;
-    window.playerHP = 100;  // Здоровье
-    window.playerDefense = 10;  // Защита
+function selectClass(chosenClass) {
+  playerClass = chosenClass;
+  document.getElementById("class-selection").style.display = "none";
+  document.getElementById("actions").style.display = "block";
+  document.getElementById("class-title").textContent = `Класс: ${playerClass}`;
 }
 
 function attack() {
-    const result = document.getElementById('actionResult');
-    result.textContent = `Вы нанесли урон врагу как ${window.playerClass}!`;
+  log(`Вы атаковали как ${playerClass}`);
 }
 
 function defend() {
-    const result = document.getElementById('actionResult');
-    result.textContent = `Вы повысили защиту, готовясь к следующему ходу.`;
+  log(`Вы защищаетесь как ${playerClass}`);
 }
 
 function showStatus() {
-    const result = document.getElementById('actionResult');
-    result.textContent = `Класс: ${window.playerClass}, Здоровье: ${window.playerHP}, Защита: ${window.playerDefense}`;
+  log(`Класс: ${playerClass}. Пока что без характеристик.`);
+}
+
+function log(text) {
+  document.getElementById("log").textContent = text;
 }
