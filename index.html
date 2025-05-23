@@ -2,12 +2,13 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RPG Мир Теней</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="game">
+    <!-- Выбор класса -->
     <div id="class-selection">
       <h2>Выбери класс</h2>
       <button onclick="selectClass('Воин')">Воин</button>
@@ -15,6 +16,7 @@
       <button onclick="selectClass('Монах')">Монах</button>
     </div>
 
+    <!-- Бой -->
     <div id="actions" style="display:none;">
       <h2 id="class-title"></h2>
       <p>🧑‍💻 Вы: <span id="player-hp">100</span> HP</p>
@@ -25,6 +27,7 @@
       <p id="log"></p>
     </div>
 
+    <!-- Город -->
     <div id="city" style="display:none;">
       <h2>🏙 Город</h2>
       <p>Выберите действие:</p>
