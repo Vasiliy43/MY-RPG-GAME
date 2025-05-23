@@ -1,19 +1,29 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Текстовая RPG</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPG Мир Теней</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>Добро пожаловать в RPG!</h1>
-    <div id="game">
-        <p>Выберите класс:</p>
-        <button onclick="chooseClass('Воин')">Воин</button>
-        <button onclick="chooseClass('Маг')">Маг</button>
-        <button onclick="chooseClass('Монах')">Монах</button>
+  <div id="game">
+    <div id="class-selection">
+      <h2>Выбери класс</h2>
+      <button onclick="selectClass('Воин')">Воин</button>
+      <button onclick="selectClass('Маг')">Маг</button>
+      <button onclick="selectClass('Монах')">Монах</button>
     </div>
-    <script src="js/game.js"></script>
+
+    <div id="actions" style="display:none;">
+      <h2 id="class-title"></h2>
+      <button onclick="attack()">Атака</button>
+      <button onclick="defend()">Защита</button>
+      <button onclick="showStatus()">Статус</button>
+      <p id="log"></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
