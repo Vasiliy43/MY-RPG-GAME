@@ -8,8 +8,7 @@ function selectClass(chosenClass) {
   playerHP = 100;
   enemyHP = 100;
   isDefending = false;
-  document.getElementById("class-selection").style.display = "none";
-  document.getElementById("actions").style.display = "block";
+  showSection("actions");
   document.getElementById("class-title").textContent = `Класс: ${playerClass}`;
   updateHP();
   log(`Вы выбрали класс: ${playerClass}`);
@@ -46,7 +45,12 @@ function enemyAttack() {
 }
 
 function showStatus() {
-  log(`Класс: ${playerClass}, Ваше здоровье: ${playerHP}, Здоровье врага: ${enemyHP}`);
+  const statusText = `Класс: ${playerClass}, Ваше здоровье: ${playerHP}, Здоровье врага: ${enemyHP}`;
+  if (document.getElementById("city").style.display === "block") {
+    document.getElementById("city-log").textContent = statusText;
+  } else {
+    log(statusText);
+  }
 }
 
 function updateHP() {
@@ -60,7 +64,7 @@ function checkBattleEnd() {
     disableButtons();
   } else if (enemyHP <= 0) {
     log("Вы победили врага! 🎉");
-    disableButtons();
+    setTimeout(goToCity, 1500); // Переход в город через 1.5 секунды
   }
 }
 
@@ -82,6 +86,42 @@ function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Город
+function goToCity() {
+  showSection("city");
+  document.getElementById("city-log").textContent = "Вы прибыли в город.";
+}
+
+function rest() {
+  playerHP = 100;
+  updateHP();
+  document.getElementById("city-log").textContent = "Вы восстановили здоровье в таверне.";
+  saveProgress();
+}
+
+function goToBattle() {
+  enemyHP = 100;
+  isDefending = false;
+  updateHP();
+  log("Вы вышли на новый бой!");
+  enableButtons();
+  showSection("actions");
+  saveProgress();
+}
+
+function enableButtons() {
+  const buttons = document.querySelectorAll("#actions button");
+  buttons.forEach(btn => btn.disabled = false);
+}
+
+// Скрыть/показать нужную часть
+function showSection(id) {
+  document.getElementById("class-selection").style.display = "none";
+  document.getElementById("actions").style.display = "none";
+  document.getElementById("city").style.display = "none";
+  document.getElementById(id).style.display = "block";
+}
+
 // Сохранение
 function saveProgress() {
   const data = {
@@ -101,14 +141,16 @@ function loadProgress() {
     playerHP = data.playerHP;
     enemyHP = data.enemyHP;
     isDefending = data.isDefending;
-    document.getElementById("class-selection").style.display = "none";
-    document.getElementById("actions").style.display = "block";
-    document.getElementById("class-title").textContent = `Класс: ${playerClass}`;
-    updateHP();
-    log(`Загружено сохранение. Вы — ${playerClass}`);
-    checkBattleEnd();
+    if (enemyHP <= 0) {
+      goToCity();
+    } else {
+      showSection("actions");
+      document.getElementById("class-title").textContent = `Класс: ${playerClass}`;
+      updateHP();
+      log(`Загружено сохранение. Вы — ${playerClass}`);
+      checkBattleEnd();
+    }
   }
 }
 
-// Автозагрузка при старте
 window.onload = loadProgress;
