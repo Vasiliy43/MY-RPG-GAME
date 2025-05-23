@@ -1,9 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
-  background: #111;
-  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #f0f0f0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,21 +11,78 @@ body {
 }
 
 #game {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 30px 50px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  width: 350px;
   text-align: center;
-  width: 300px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #ffd700; /* золотистый */
+  text-shadow: 0 0 5px #ffd700;
 }
 
 button {
-  margin: 10px;
-  padding: 10px 20px;
-  font-size: 18px;
+  margin: 10px 8px;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  background-color: #222;
   border: none;
+  border-radius: 8px;
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
   color: white;
-  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(39, 69, 245, 0.5);
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-  background-color: #555;
+  background: linear-gradient(45deg, #2575fc, #6a11cb);
+  transform: translateY(-3px);
+}
+
+button:disabled {
+  background: #555;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+p {
+  font-size: 16px;
+  margin: 10px 0;
+  line-height: 1.4;
+  text-shadow: 0 0 3px rgba(0,0,0,0.7);
+  white-space: pre-line; /* чтобы переносы \n отображались */
+}
+
+#log, #city-log {
+  min-height: 60px;
+  margin-top: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 14px;
+  text-align: left;
+  overflow-y: auto;
+}
+
+#actions p, #actions button {
+  margin-top: 12px;
+}
+
+@media (max-width: 400px) {
+  #game {
+    width: 90vw;
+    padding: 20px;
+  }
+
+  button {
+    width: 100%;
+    margin: 8px 0;
+  }
 }
