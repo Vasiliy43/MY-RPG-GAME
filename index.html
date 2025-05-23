@@ -17,12 +17,8 @@
 
     <div id="actions" style="display:none;">
       <h2 id="class-title"></h2>
-
-      <div>
-        <p>🧑‍💻 Вы: <span id="player-hp">100</span> HP</p>
-        <p>👹 Враг: <span id="enemy-hp">100</span> HP</p>
-      </div>
-
+      <p>🧑‍💻 Вы: <span id="player-hp">100</span> HP</p>
+      <p>👹 Враг: <span id="enemy-hp">100</span> HP</p>
       <button onclick="attack()">Атака</button>
       <button onclick="defend()">Защита</button>
       <button onclick="showStatus()">Статус</button>
@@ -30,10 +26,9 @@
     </div>
 
     <div id="city" style="display:none;">
-      <h2>🏙️ Город</h2>
-      <p id="city-log">Вы прибыли в город.</p>
-      <button onclick="rest()">Отдохнуть</button>
-      <button onclick="goToBattle()">В бой!</button>
+      <h2>🏙 Добро пожаловать в город!</h2>
+      <p>Здесь ты можешь отдохнуть, купить снаряжение и выбрать новое приключение.</p>
+      <button onclick="restart()">Вернуться к выбору класса</button>
     </div>
   </div>
 
