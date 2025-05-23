@@ -8,8 +8,6 @@
 </head>
 <body>
   <div id="game">
-    
-    <!-- Выбор класса -->
     <div id="class-selection">
       <h2>Выбери класс</h2>
       <button onclick="selectClass('Воин')">Воин</button>
@@ -17,25 +15,26 @@
       <button onclick="selectClass('Монах')">Монах</button>
     </div>
 
-    <!-- Бой -->
     <div id="actions" style="display:none;">
       <h2 id="class-title"></h2>
-      <p>🧑‍💻 Вы: <span id="player-hp">100</span> HP</p>
-      <p>👹 Враг: <span id="enemy-hp">100</span> HP</p>
+
+      <div>
+        <p>🧑‍💻 Вы: <span id="player-hp">100</span> HP</p>
+        <p>👹 Враг: <span id="enemy-hp">100</span> HP</p>
+      </div>
+
       <button onclick="attack()">Атака</button>
       <button onclick="defend()">Защита</button>
       <button onclick="showStatus()">Статус</button>
       <p id="log"></p>
     </div>
 
-    <!-- Город -->
     <div id="city" style="display:none;">
       <h2>🏙️ Город</h2>
       <p id="city-log">Вы прибыли в город.</p>
-      <button onclick="rest()">Отдохнуть (восстановить HP)</button>
+      <button onclick="rest()">Отдохнуть</button>
       <button onclick="goToBattle()">В бой!</button>
     </div>
-
   </div>
 
   <script src="script.js"></script>
