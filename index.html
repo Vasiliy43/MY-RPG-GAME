@@ -1,121 +1,128 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>RPG Мир Теней - Выбор класса 3D</title>
-  <style>
-    body { margin: 0; overflow: hidden; font-family: sans-serif; background: #222; color: white; }
-    #info {
-      position: absolute;
-      top: 10px; left: 10px;
-      z-index: 10;
-      background: rgba(0,0,0,0.5);
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 18px;
-      user-select: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RPG Мир Теней - Выбор класса</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+  body {
+    margin: 0; padding: 0;
+    background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+    color: #eee;
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  #container {
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+    text-shadow: 0 0 10px #66ccff;
+  }
+
+  .classes {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+  }
+
+  .class-card {
+    background: #222;
+    border-radius: 12px;
+    width: 220px;
+    padding: 20px;
+    box-shadow: 0 0 15px #000;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+  }
+
+  .class-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 30px #3399ff;
+  }
+
+  .class-image {
+    width: 100%;
+    height: 260px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    filter: drop-shadow(0 0 6px #66ccff);
+  }
+
+  .warrior {
+    background-image: url('https://i.imgur.com/cwDhGZk.png');
+  }
+
+  .mage {
+    background-image: url('https://i.imgur.com/NYXHXq5.png');
+  }
+
+  .monk {
+    background-image: url('https://i.imgur.com/fz5wl5f.png');
+  }
+
+  .class-name {
+    margin-top: 15px;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px #66ccff;
+  }
+
+  #log {
+    margin-top: 40px;
+    font-size: 1.2rem;
+    color: #66ccff;
+    min-height: 24px;
+    user-select: none;
+  }
+
+  /* Анимация свечения */
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 15px #3399ff; }
+    50% { box-shadow: 0 0 30px #66ccff; }
+  }
+</style>
 </head>
 <body>
-  <div id="info">Кликните по фигуре чтобы выбрать класс: Воин (куб), Маг (сфера), Монах (цилиндр)</div>
+  <div id="container">
+    <h1>Выберите класс персонажа</h1>
+    <div class="classes">
+      <div class="class-card" onclick="selectClass('Воин')" tabindex="0" role="button" aria-label="Выбрать класс Воин">
+        <div class="class-image warrior"></div>
+        <div class="class-name">Воин</div>
+      </div>
+      <div class="class-card" onclick="selectClass('Маг')" tabindex="0" role="button" aria-label="Выбрать класс Маг">
+        <div class="class-image mage"></div>
+        <div class="class-name">Маг</div>
+      </div>
+      <div class="class-card" onclick="selectClass('Монах')" tabindex="0" role="button" aria-label="Выбрать класс Монах">
+        <div class="class-image monk"></div>
+        <div class="class-name">Монах</div>
+      </div>
+    </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/three@0.154.0/build/three.min.js"></script>
+    <div id="log"></div>
+  </div>
 
-  <script>
-    let scene, camera, renderer;
-    let raycaster = new THREE.Raycaster();
-    let mouse = new THREE.Vector2();
-
-    let selectableObjects = [];
-
-    init();
-    animate();
-
-    function init() {
-      scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x222222);
-
-      camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
-      camera.position.set(0, 2, 6);
-
-      renderer = new THREE.WebGLRenderer({antialias:true});
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      document.body.appendChild(renderer.domElement);
-
-      // Свет
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-      scene.add(ambientLight);
-
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-      directionalLight.position.set(5,10,7);
-      scene.add(directionalLight);
-
-      // Воин - куб
-      const warriorGeo = new THREE.BoxGeometry(1,1.8,0.7);
-      const warriorMat = new THREE.MeshStandardMaterial({color: 0x8B0000});
-      const warrior = new THREE.Mesh(warriorGeo, warriorMat);
-      warrior.position.set(-2, 0.9, 0);
-      warrior.userData.className = "Воин";
-      scene.add(warrior);
-      selectableObjects.push(warrior);
-
-      // Маг - сфера
-      const mageGeo = new THREE.SphereGeometry(0.9, 32, 32);
-      const mageMat = new THREE.MeshStandardMaterial({color: 0x1E90FF});
-      const mage = new THREE.Mesh(mageGeo, mageMat);
-      mage.position.set(0, 0.9, 0);
-      mage.userData.className = "Маг";
-      scene.add(mage);
-      selectableObjects.push(mage);
-
-      // Монах - цилиндр
-      const monkGeo = new THREE.CylinderGeometry(0.6, 0.6, 1.8, 32);
-      const monkMat = new THREE.MeshStandardMaterial({color: 0x228B22});
-      const monk = new THREE.Mesh(monkGeo, monkMat);
-      monk.position.set(2, 0.9, 0);
-      monk.userData.className = "Монах";
-      scene.add(monk);
-      selectableObjects.push(monk);
-
-      window.addEventListener('resize', onWindowResize);
-      window.addEventListener('click', onClick);
-    }
-
-    function onWindowResize() {
-      camera.aspect = window.innerWidth/window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-    function onClick(event) {
-      mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-      mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObjects(selectableObjects);
-
-      if (intersects.length > 0) {
-        const selected = intersects[0].object;
-        const chosenClass = selected.userData.className;
-        alert(`Вы выбрали класс: ${chosenClass}`);
-        startGame(chosenClass);
-      }
-    }
-
-    function startGame(chosenClass) {
-      // Здесь запускай логику игры, например:
-      document.body.innerHTML = `<h1 style="color:white; text-align:center; margin-top: 30vh;">
-        Добро пожаловать, ${chosenClass}!
-        <br><br>
-        Игра начинается...
-      </h1>`;
-    }
-
-    function animate() {
-      requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-    }
-  </script>
+<script>
+  function selectClass(cls) {
+    const log = document.getElementById('log');
+    log.textContent = `Вы выбрали класс: ${cls}. Загрузка игры...`;
+    // Здесь позже можно сделать переход к следующему экрану
+  }
+</script>
 </body>
 </html>
