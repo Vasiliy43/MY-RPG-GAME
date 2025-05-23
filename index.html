@@ -1,216 +1,121 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RPG Мир Теней</title>
-<style>
-  body {
-    margin: 0; padding: 0;
-    font-family: sans-serif;
-    background: #111;
-    color: white;
-    display: flex; justify-content: center; align-items: center;
-    height: 100vh;
-  }
-  #game {
-    text-align: center;
-    max-width: 400px;
-    width: 90vw;
-  }
-  button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 18px;
-    cursor: pointer;
-    background: #222;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    transition: background 0.3s;
-  }
-  button:hover:not(:disabled) {
-    background: #444;
-  }
-  button:disabled {
-    background: #555;
-    cursor: not-allowed;
-  }
-  #log, #city-log {
-    white-space: pre-line;
-    min-height: 80px;
-    background: #222;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>RPG Мир Теней - Выбор класса 3D</title>
+  <style>
+    body { margin: 0; overflow: hidden; font-family: sans-serif; background: #222; color: white; }
+    #info {
+      position: absolute;
+      top: 10px; left: 10px;
+      z-index: 10;
+      background: rgba(0,0,0,0.5);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 18px;
+      user-select: none;
+    }
+  </style>
 </head>
 <body>
-  <div id="game">
+  <div id="info">Кликните по фигуре чтобы выбрать класс: Воин (куб), Маг (сфера), Монах (цилиндр)</div>
 
-    <div id="class-selection">
-      <h2>Выбери класс</h2>
-      <button onclick="selectClass('Воин')">Воин</button>
-      <button onclick="selectClass('Маг')">Маг</button>
-      <button onclick="selectClass('Монах')">Монах</button>
-    </div>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.154.0/build/three.min.js"></script>
 
-    <div id="actions" style="display:none;">
-      <h2 id="class-title"></h2>
-      <p>🧑‍💻 Вы: <span id="player-hp">100</span> HP</p>
-      <p>👹 Враг: <span id="enemy-hp">100</span> HP</p>
-      <button onclick="attack()">Атака</button>
-      <button onclick="defend()">Защита</button>
-      <button onclick="showStatus()">Статус</button>
-      <p id="log"></p>
-    </div>
+  <script>
+    let scene, camera, renderer;
+    let raycaster = new THREE.Raycaster();
+    let mouse = new THREE.Vector2();
 
-    <div id="city" style="display:none;">
-      <h2>🏙 Город</h2>
-      <p>Выберите действие:</p>
-      <button onclick="rest()">🛏 Отдохнуть</button>
-      <button onclick="shop()">🛒 Магазин</button>
-      <button onclick="startQuest()">⚔ Новое задание</button>
-      <p id="city-log"></p>
-    </div>
+    let selectableObjects = [];
 
-  </div>
+    init();
+    animate();
 
-<script>
-  let playerClass = "";
-  let playerHP = 100;
-  let enemyHP = 100;
-  let isDefending = false;
-  let inBattle = false;
+    function init() {
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x222222);
 
-  function selectClass(chosenClass) {
-    playerClass = chosenClass;
-    playerHP = 100;
-    enemyHP = 100;
-    isDefending = false;
-    inBattle = true;
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
+      camera.position.set(0, 2, 6);
 
-    document.getElementById("class-selection").style.display = "none";
-    document.getElementById("actions").style.display = "block";
-    document.getElementById("city").style.display = "none";
+      renderer = new THREE.WebGLRenderer({antialias:true});
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
 
-    document.getElementById("class-title").textContent = `Класс: ${playerClass}`;
-    updateHP();
-    log(`Вы выбрали класс: ${playerClass}. Начинается бой!`);
-  }
+      // Свет
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
 
-  function attack() {
-    if (!inBattle) return;
-    const damage = getRandom(15, 25);
-    enemyHP -= damage;
-    log(`Вы нанесли ${damage} урона врагу.`);
-    checkBattleEnd();
-    if (enemyHP > 0) {
-      enemyAttack();
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(5,10,7);
+      scene.add(directionalLight);
+
+      // Воин - куб
+      const warriorGeo = new THREE.BoxGeometry(1,1.8,0.7);
+      const warriorMat = new THREE.MeshStandardMaterial({color: 0x8B0000});
+      const warrior = new THREE.Mesh(warriorGeo, warriorMat);
+      warrior.position.set(-2, 0.9, 0);
+      warrior.userData.className = "Воин";
+      scene.add(warrior);
+      selectableObjects.push(warrior);
+
+      // Маг - сфера
+      const mageGeo = new THREE.SphereGeometry(0.9, 32, 32);
+      const mageMat = new THREE.MeshStandardMaterial({color: 0x1E90FF});
+      const mage = new THREE.Mesh(mageGeo, mageMat);
+      mage.position.set(0, 0.9, 0);
+      mage.userData.className = "Маг";
+      scene.add(mage);
+      selectableObjects.push(mage);
+
+      // Монах - цилиндр
+      const monkGeo = new THREE.CylinderGeometry(0.6, 0.6, 1.8, 32);
+      const monkMat = new THREE.MeshStandardMaterial({color: 0x228B22});
+      const monk = new THREE.Mesh(monkGeo, monkMat);
+      monk.position.set(2, 0.9, 0);
+      monk.userData.className = "Монах";
+      scene.add(monk);
+      selectableObjects.push(monk);
+
+      window.addEventListener('resize', onWindowResize);
+      window.addEventListener('click', onClick);
     }
-    updateHP();
-  }
 
-  function defend() {
-    if (!inBattle) return;
-    isDefending = true;
-    log("Вы встали в защиту. Урон по вам будет уменьшен.");
-    enemyAttack();
-    updateHP();
-  }
-
-  function enemyAttack() {
-    let damage = getRandom(10, 20);
-    if (isDefending) {
-      damage = Math.floor(damage / 2);
-      isDefending = false;
+    function onWindowResize() {
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
     }
-    playerHP -= damage;
-    logAppend(`Враг атакует и наносит ${damage} урона вам.`);
-    checkBattleEnd();
-  }
 
-  function showStatus() {
-    log(`Класс: ${playerClass}\nВаше здоровье: ${playerHP}\nЗдоровье врага: ${enemyHP}`);
-  }
+    function onClick(event) {
+      mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-  function updateHP() {
-    document.getElementById("player-hp").textContent = Math.max(playerHP, 0);
-    document.getElementById("enemy-hp").textContent = Math.max(enemyHP, 0);
-  }
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(selectableObjects);
 
-  function checkBattleEnd() {
-    if (playerHP <= 0) {
-      log("Вы проиграли! 🪦");
-      disableButtons();
-      inBattle = false;
-      setTimeout(() => {
-        log("Игра окончена. Вы можете перезагрузить страницу для новой игры.");
-      }, 2000);
-    } else if (enemyHP <= 0) {
-      log("Вы победили врага! 🎉 Переход в город...");
-      disableButtons();
-      inBattle = false;
-      setTimeout(goToCity, 2000);
+      if (intersects.length > 0) {
+        const selected = intersects[0].object;
+        const chosenClass = selected.userData.className;
+        alert(`Вы выбрали класс: ${chosenClass}`);
+        startGame(chosenClass);
+      }
     }
-  }
 
-  function disableButtons() {
-    const buttons = document.querySelectorAll("#actions button");
-    buttons.forEach(btn => btn.disabled = true);
-  }
+    function startGame(chosenClass) {
+      // Здесь запускай логику игры, например:
+      document.body.innerHTML = `<h1 style="color:white; text-align:center; margin-top: 30vh;">
+        Добро пожаловать, ${chosenClass}!
+        <br><br>
+        Игра начинается...
+      </h1>`;
+    }
 
-  function enableButtons() {
-    const buttons = document.querySelectorAll("#actions button");
-    buttons.forEach(btn => btn.disabled = false);
-  }
-
-  function log(text) {
-    document.getElementById("log").textContent = text;
-  }
-
-  function logAppend(text) {
-    const current = document.getElementById("log").textContent;
-    document.getElementById("log").textContent = current + "\n" + text;
-  }
-
-  function getRandom(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  function goToCity() {
-    document.getElementById("actions").style.display = "none";
-    document.getElementById("city").style.display = "block";
-    document.getElementById("city-log").textContent = "Добро пожаловать в город!";
-  }
-
-  function rest() {
-    playerHP = 100;
-    updateHP();
-    document.getElementById("city-log").textContent = "Вы отдохнули и восстановили здоровье.";
-    enableButtons();
-  }
-
-  function shop() {
-    document.getElementById("city-log").textContent = "Магазин пока не реализован, но скоро появится!";
-  }
-
-  function startQuest() {
-    enemyHP = 100;
-    playerHP = Math.min(playerHP, 100);
-    isDefending = false;
-    inBattle = true;
-
-    document.getElementById("city").style.display = "none";
-    document.getElementById("actions").style.display = "block";
-    enableButtons();
-
-    document.getElementById("class-title").textContent = `Класс: ${playerClass}`;
-    updateHP();
-    log("Начинается новое задание! Бой начинается.");
-  }
-</script>
-
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+  </script>
 </body>
 </html>
