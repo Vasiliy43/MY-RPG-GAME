@@ -7,7 +7,7 @@
     body {
       margin: 0;
       padding: 0;
-      background: url('your-background.jpg') no-repeat center center fixed;
+      background: url('splash-bg.jpg') no-repeat center center fixed;
       background-size: cover;
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
@@ -35,7 +35,7 @@
     .logo {
       font-size: 48px;
       font-weight: bold;
-      text-shadow: 0 0 10px #fff;
+      text-shadow: 0 0 10px #fff, 0 0 20px #7f00ff;
       margin-bottom: 20px;
     }
 
@@ -70,7 +70,7 @@
 <body>
   <div class="overlay"></div>
   <div class="splash-content">
-    <div class="logo">Твоя RPG: Мир Теней</div>
+    <div class="logo">Мир Теней</div>
     <div class="loading">Загрузка...</div>
     <button class="play-button" onclick="enterGame()">Играть</button>
   </div>
@@ -80,11 +80,11 @@
       window.location.href = "main.html"; // Замени на свой основной файл игры
     }
 
-    // Эффект задержки кнопки
+    // Кнопка появляется позже
     document.querySelector('.play-button').style.display = 'none';
     setTimeout(() => {
       document.querySelector('.play-button').style.display = 'inline-block';
-    }, 3000); // кнопка появится через 3 секунды
+    }, 3000);
   </script>
 </body>
 </html>
