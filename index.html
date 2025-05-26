@@ -1,128 +1,90 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RPG Мир Теней - Выбор класса</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+  <meta charset="UTF-8">
+  <title>Заставка</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('your-background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
 
-  body {
-    margin: 0; padding: 0;
-    background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
-    color: #eee;
-    font-family: 'Orbitron', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-  }
+    .overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
 
-  #container {
-    text-align: center;
-    max-width: 900px;
-    width: 100%;
-  }
+    .splash-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      opacity: 0;
+      animation: fadeIn 2s ease-in-out forwards;
+      animation-delay: 1s;
+    }
 
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 40px;
-    text-shadow: 0 0 10px #66ccff;
-  }
+    .logo {
+      font-size: 48px;
+      font-weight: bold;
+      text-shadow: 0 0 10px #fff;
+      margin-bottom: 20px;
+    }
 
-  .classes {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-  }
+    .play-button {
+      margin-top: 30px;
+      padding: 12px 30px;
+      font-size: 20px;
+      background: #222;
+      color: white;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-  .class-card {
-    background: #222;
-    border-radius: 12px;
-    width: 220px;
-    padding: 20px;
-    box-shadow: 0 0 15px #000;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    user-select: none;
-  }
+    .play-button:hover {
+      background: #444;
+    }
 
-  .class-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 0 30px #3399ff;
-  }
+    .loading {
+      font-size: 16px;
+      opacity: 0.6;
+    }
 
-  .class-image {
-    width: 100%;
-    height: 260px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center bottom;
-    filter: drop-shadow(0 0 6px #66ccff);
-  }
-
-  .warrior {
-    background-image: url('https://i.imgur.com/cwDhGZk.png');
-  }
-
-  .mage {
-    background-image: url('https://i.imgur.com/NYXHXq5.png');
-  }
-
-  .monk {
-    background-image: url('https://i.imgur.com/fz5wl5f.png');
-  }
-
-  .class-name {
-    margin-top: 15px;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-    text-shadow: 0 0 8px #66ccff;
-  }
-
-  #log {
-    margin-top: 40px;
-    font-size: 1.2rem;
-    color: #66ccff;
-    min-height: 24px;
-    user-select: none;
-  }
-
-  /* Анимация свечения */
-  @keyframes glow {
-    0%, 100% { box-shadow: 0 0 15px #3399ff; }
-    50% { box-shadow: 0 0 30px #66ccff; }
-  }
-</style>
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div id="container">
-    <h1>Выберите класс персонажа</h1>
-    <div class="classes">
-      <div class="class-card" onclick="selectClass('Воин')" tabindex="0" role="button" aria-label="Выбрать класс Воин">
-        <div class="class-image warrior"></div>
-        <div class="class-name">Воин</div>
-      </div>
-      <div class="class-card" onclick="selectClass('Маг')" tabindex="0" role="button" aria-label="Выбрать класс Маг">
-        <div class="class-image mage"></div>
-        <div class="class-name">Маг</div>
-      </div>
-      <div class="class-card" onclick="selectClass('Монах')" tabindex="0" role="button" aria-label="Выбрать класс Монах">
-        <div class="class-image monk"></div>
-        <div class="class-name">Монах</div>
-      </div>
-    </div>
-
-    <div id="log"></div>
+  <div class="overlay"></div>
+  <div class="splash-content">
+    <div class="logo">Твоя RPG: Мир Теней</div>
+    <div class="loading">Загрузка...</div>
+    <button class="play-button" onclick="enterGame()">Играть</button>
   </div>
 
-<script>
-  function selectClass(cls) {
-    const log = document.getElementById('log');
-    log.textContent = `Вы выбрали класс: ${cls}. Загрузка игры...`;
-    // Здесь позже можно сделать переход к следующему экрану
-  }
-</script>
+  <script>
+    function enterGame() {
+      window.location.href = "main.html"; // Замени на свой основной файл игры
+    }
+
+    // Эффект задержки кнопки
+    document.querySelector('.play-button').style.display = 'none';
+    setTimeout(() => {
+      document.querySelector('.play-button').style.display = 'inline-block';
+    }, 3000); // кнопка появится через 3 секунды
+  </script>
 </body>
 </html>
