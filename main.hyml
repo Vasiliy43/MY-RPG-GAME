@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Мир Теней — Игра</title>
+  <style>
+    body { font-family: Arial; background: #111; color: white; padding: 20px; }
+    button { margin: 5px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h1>Добро пожаловать в игру</h1>
+  <p>Выберите действие:</p>
+  <button onclick="alert('Атака!')">Атака</button>
+  <button onclick="alert('Защита!')">Защита</button>
+  <button onclick="alert('Показать статус')">Статус</button>
+</body>
+</html>
